@@ -20,6 +20,14 @@ type Querier struct {
 	SQL  *StatementBuilder
 }
 
+func NewQuerier(pool *pgxpool.Pool, scan *pgxscan.API, sql *StatementBuilder) *Querier {
+	return &Querier{
+		pool: pool,
+		Scan: scan,
+		SQL:  sql,
+	}
+}
+
 func (q *Querier) Exec(ctx context.Context, query Sqlizer) (pgconn.CommandTag, error) {
 	// check for query errors
 	if getErr, ok := query.(hasErr); ok && getErr.Err() != nil {
